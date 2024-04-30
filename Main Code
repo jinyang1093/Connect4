@@ -1,0 +1,407 @@
+import random
+import math
+import numpy as np
+import sys
+import random
+
+
+
+
+def create_board():
+    Row_Count=6
+    a=[0,0,0,0,0,0,0]
+    board = a*Row_Count
+    return board
+    
+
+
+
+def check_move(board, turn, col, pop):
+ Row_Count=int(len(board)/7)
+   
+ if pop==False:
+     for r in range (Row_Count):    
+          if board[r*7+col]==0:
+             
+             g=1
+          elif board [r*7+col] !=0:
+             
+             g=2
+     if g==1:
+         return True
+     if g==2:
+         return False
+ if pop==True:
+   if turn ==1:
+        
+            if board[col]==1:
+                
+                return True
+                
+            elif board[col]!=1:
+               
+      
+             return False
+   if turn ==2:
+       
+           if board[col]==2:
+             
+               return True
+              
+           elif board[col]!=2:
+               
+   
+            return False
+              
+           
+def apply_move(board, turn, col, pop):
+        Row_Count=int(len(board)/7)
+        Newboard=board[:] 
+        if pop ==False:
+            for r in range (Row_Count):
+                if Newboard[r*7+col]==0:
+                    Newboard[r*7+col]=turn
+                    
+                    break
+                    
+            
+        if pop ==True:
+         for r in range(Row_Count):
+             if Newboard[r*7+col]==turn:
+                 x=Row_Count
+                 while x-2 >= r:
+                     Newboard[r*7+col]=Newboard[r*7+7+col]
+                     r +=1
+                 break
+            
+        return Newboard
+                 
+                 
+  
+def check_victory(board, who_played):
+    
+ Row_Count=int(len(board)/7)
+ Column_Count =  7
+ if who_played == 1:
+   for r in range (Row_Count):
+       for c in range(Column_Count-3):
+         if board[r*7+c]==board[r*7+c+1]==board[r*7+c+2]==board[r*7+c+3]==2:
+             #horizontal win
+             return 2
+             break
+   for r in range (Row_Count):
+        for c in range(Column_Count-3):
+         if board[r*7+c]==board[r*7+c+1]==board[r*7+c+2]==board[r*7+c+3]==1:
+             #horizontal win
+             return 1
+             break
+   for r in range (Row_Count-3):
+     for c in range(Column_Count):
+         if board[r*7+c]==board[r*7+c+7]==board[r*7+c+14]==board[r*7+c+21]==2:
+             #vertical win
+             return 2
+             break
+   for r in range (Row_Count-3):
+     for c in range(Column_Count):
+         if board[r*7+c]==board[r*7+c+7]==board[r*7+c+14]==board[r*7+c+21]==1:
+             #vertical win
+             return 1
+             break
+   for r in range (Row_Count-3):
+       for c in range(Column_Count-3):
+           if board[r*7+c]==board[r*7+c+8]==board[r*7+c+16]==board[r*7+c+24]==2:
+               #diagonal win 
+               return 2
+               break
+   for r in range (Row_Count-3):
+       for c in range(Column_Count-3):
+           if board[r*7+c]==board[r*7+c+8]==board[r*7+c+16]==board[r*7+c+24]==1:
+               #diagonal win 
+               return 1
+               break
+   for r in range (3,Row_Count,1):
+       for c in range(Column_Count):      
+           if board[r*7+c]==board[r*7+c-6]==board[r*7+c-12]==board[r*7+c-18]==2:
+               #diagonal win 
+               return 2
+               break
+   for r in range (3,Row_Count,1):
+        for c in range(Column_Count):  
+           if board[r*7+c]==board[r*7+c-6]==board[r*7+c-12]==board[r*7+c-18]==1:
+               #diagonal win 
+               return 1
+               break
+   else:
+       
+       return 0    
+ elif who_played ==2:
+      
+  for r in range (Row_Count):
+      for c in range(Column_Count-3):
+        if board[r*7+c]==board[r*7+c+1]==board[r*7+c+2]==board[r*7+c+3]==1:
+            #horizontal win
+            return 1
+            break
+  for r in range (Row_Count):
+       for c in range(Column_Count-3):
+        if board[r*7+c]==board[r*7+c+1]==board[r*7+c+2]==board[r*7+c+3]==2:
+            #horizontal win
+            return 2
+            break
+  for r in range (Row_Count-3):
+    for c in range(Column_Count):
+        if board[r*7+c]==board[r*7+c+7]==board[r*7+c+14]==board[r*7+c+21]==1:
+            #vertical win
+            return 1
+            break
+  for r in range (Row_Count-3):
+    for c in range(Column_Count):
+        if board[r*7+c]==board[r*7+c+7]==board[r*7+c+14]==board[r*7+c+21]==2:
+            #vertical win
+            return 2
+            break
+  for r in range (Row_Count-3):
+      for c in range(Column_Count-3):
+          if board[r*7+c]==board[r*7+c+8]==board[r*7+c+16]==board[r*7+c+24]==1:
+              #diagonal win 
+              return 1
+              break
+  for r in range (Row_Count-3):
+      for c in range(Column_Count-3):
+          if board[r*7+c]==board[r*7+c+8]==board[r*7+c+16]==board[r*7+c+24]==2:
+              #diagonal win 
+              return 2
+              break
+  for r in range (3,Row_Count,1):
+      for c in range(Column_Count):      
+          if board[r*7+c]==board[r*7+c-6]==board[r*7+c-12]==board[r*7+c-18]==1:
+              #diagonal win 
+              return 1
+              break
+  for r in range (3,Row_Count,1):
+       for c in range(Column_Count):  
+          if board[r*7+c]==board[r*7+c-6]==board[r*7+c-12]==board[r*7+c-18]==2:
+              #diagonal win 
+              return 2
+              break
+  else:
+      
+      return 0    
+
+def computer_move(board, turn, level):
+ Row_Count=int(len(board)/7)
+ Column_Count =  7
+ tempboard=board[:]
+ x=0
+ if level ==1:
+         return(random.randrange(7),random.choice([True, False]))
+         
+ if level ==2:
+    
+   
+    if turn ==1:
+        
+     for move in range(7):
+         
+         if check_move(board, 1, move,False)==True:
+          tempboard=board[:]   
+          tempboard=apply_move(tempboard, turn, move, False)
+          if check_victory(tempboard, turn)==turn:
+             
+            
+             x=9999
+             
+             return (move,False)
+             
+             break
+      
+      
+     if x <=100:
+         
+      for move in range(Column_Count):
+         if check_move(board, 1, move, True)==True:
+           tempboard=board[:]   
+           tempboard=apply_move(tempboard, turn, move, True)
+           if check_victory(tempboard, turn)==turn:
+             
+            
+                    
+                      
+             x+=9999
+             return (move,True)
+             break    
+      
+     if x <=100:
+         for move in range(Column_Count):
+            if check_move(board, 2, move, False)==True:
+              tempboard=board[:]   
+              tempboard=apply_move(tempboard, turn, move, False)
+              if check_victory(tempboard, 2)==2:
+                
+          
+                x+=9999
+                return (move,False)
+                break    
+        
+     if x <=100:
+         for move in range(Column_Count):
+            if check_move(board, 2, move, True)==True:
+              tempboard=board[:]   
+              tempboard=apply_move(tempboard, turn, move, True)
+              if check_victory(tempboard, 2)==2:
+                
+          
+                x+=9999
+                return (move,False)
+                break    
+     if x <=100:
+       
+         return(random.randrange(7),random.choice([True, False]))
+    if turn ==2:
+         
+      for move in range(7):
+          
+          if check_move(board, 2, move,False)==True:
+           tempboard=board[:]   
+           tempboard=apply_move(tempboard, turn, move, False)
+           if check_victory(tempboard, turn)==turn:
+              
+             
+              x=9999
+              
+              return (move,False)
+              
+              break
+       
+       
+      if x <=100:
+          
+       for move in range(Column_Count):
+          if check_move(board, 2, move, True)==True:
+            tempboard=board[:]   
+            tempboard=apply_move(tempboard, turn, move, True)
+            if check_victory(tempboard, turn)==turn:
+              
+             
+                     
+                       
+              x+=9999
+              return (move,True)
+              break    
+       
+      if x <=100:
+          for move in range(Column_Count):
+             if check_move(board, 1, move, False)==True:
+               tempboard=board[:]   
+               tempboard=apply_move(tempboard, turn, move, False)
+               if check_victory(tempboard, 1)==1:
+                 
+           
+                 x+=9999
+                 return (move,False)
+                 break    
+         
+      if x <=100:
+          for move in range(Column_Count):
+             if check_move(board, 1, move, True)==True:
+               tempboard=board[:]   
+               tempboard=apply_move(tempboard, turn, move, True)
+               if check_victory(tempboard, 1)==1:
+                 
+           
+                 x+=9999
+                 return (move,False)
+                 break    
+      if x <=100:
+        
+          return(random.randrange(7),random.choice([True, False]))
+        
+                
+            
+        
+                         
+              
+                 
+                 
+                 
+              
+def display_board(board):
+   Row_Count=int(len(board)/7)
+   
+   y=0
+   while y != Row_Count*7:
+       print (board[y],board[y+1],board[y+2],board[y+3],board[y+4],board[y+5],board[y+6])
+       y+=7
+
+def menu():
+    print("Welcome to Connect 4")
+    print("Please Key in the number of rows you want ")
+    Row_Count=int(input(":"))
+    a=[0,0,0,0,0,0,0]
+    board = a*Row_Count
+    print("Key in Number to Select Mode")
+    print("1.Player Vs Player ")
+    print("2.Player Vs Computer")
+    z=int(input("Input Number:"))
+    while check_victory(board, 1)==0:
+
+     if z==1:
+        print("Player's 1 turn")
+        c=int(input("Type 1 if pop/Type 2 if not pop  :  "))
+        6
+        v=int(input("Key in the number of column you want to do the action  :  "))
+        if c==1:
+         c=True
+         if check_move(board, 1, v, c)==True:
+             board =apply_move(board,1,v,c)
+             display_board(board)
+             check_victory(board, 1)
+             z+=1
+         else :
+             print("Invalid Move")
+        elif c==2:
+            c=False
+            if check_move(board, 1, v, c)==True:
+                board =apply_move(board,1,v,c)
+                display_board(board)
+                check_victory(board, 1)
+                z+=1
+            else:
+                print("Invalid Move")
+     if check_victory(board, z)==1:
+        print("Congrats, Player 1 Wins")
+        break
+     if check_victory(board, z)==2:
+        print("Congrats, Player 2 Wins")      
+        break        
+     if z==2:
+         print("Player's 2 turn")
+         c=int(input("Type 1 if pop/Type 2 if not pop  :  "))
+         
+         v=int(input("Key in the number of column you want to do the action  :  "))
+         if c==1:
+          c=True
+          if check_move(board, 2, v, c)==True:
+              board=apply_move(board,2,v,c)
+              display_board(board)
+              check_victory(board, 2)
+              z-=1
+          else :
+              print("Invalid Move")
+         elif c==2:
+             c=False
+             if check_move(board, 2, v, c)==True:
+                 board=apply_move(board,2,v,c)
+                 display_board(board)
+                 check_victory(board, 2)
+                 z-=1
+             else:
+                 print("Invalid Move")
+     if check_victory(board, z)==1:
+        print("Congrats, Player 1 Wins")
+        break
+     if check_victory(board, z)==2:
+        print("Congrats, Player 2 Wins")   
+        break
+if __name__ == "__main__":
+    menu()
